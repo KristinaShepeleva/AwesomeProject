@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { ImageBackground, KeyboardAvoidingView, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard, TouchableWithoutFeedback } from "react-native";
 import BgImage from '../assets/images/photo_bg.jpg';
-import IconAdd from '../assets/images/icons/add.png';
+
+import { AntDesign } from '@expo/vector-icons'; 
 
 const initialState = {
     nikename: "",
     email: "",
     password: "",
 }
-
 
 export default function RegistrationScreen () {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -40,7 +40,7 @@ export default function RegistrationScreen () {
                 >
                     <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 32 : 80}}>
 
-                            <View style={styles.addPhoto}><View style={styles.photo}><TouchableOpacity style={styles.iconAdd}><Image source={IconAdd} /></TouchableOpacity></View>
+                            <View style={styles.addPhoto}><View style={styles.photo}><TouchableOpacity style={styles.iconAdd}><AntDesign name="pluscircleo" size={24} color="#FF6C00" /></TouchableOpacity></View>
                             </View>
                         
                         <Text style={styles.title}>Реєстрація</Text> 
@@ -143,6 +143,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 14,
         right: -12,
+        borderRadius: 100,
+        backgroundColor: "#ffffff",
     },
     input: {
         height: 50,
