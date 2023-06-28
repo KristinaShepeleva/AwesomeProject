@@ -10,7 +10,8 @@ const initialState = {
 
 export default function LoginScreen () {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-    const [state, setState] = useState(initialState)
+    const [state, setState] = useState(initialState);
+    const [isShow, setShow] = useState(true);
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
@@ -22,6 +23,10 @@ export default function LoginScreen () {
           Keyboard.dismiss(); 
           console.log(state);
           setState(initialState);
+    }
+
+     const setShowPassword = () => {
+        setShow(isShow => !isShow);
     }
 
     return (
@@ -48,13 +53,13 @@ export default function LoginScreen () {
      
                         <View style={styles.inputPassword}>
                             <TextInput style={styles.input} placeholder="Пароль"
-                                secureTextEntry={true}
+                                secureTextEntry={isShow}
                                     onFocus={() => setIsShowKeyboard(true)}
                                     value={state.password}
                             onChangeText={(value) => setState((prevState) => ({...prevState, password: value }))}
                             />
                             <TouchableOpacity activeOpacity={0.8} style={styles.inputBtn}>
-                                <Text style={styles.inputBtn}>Показати</Text>
+                                <Text style={styles.inputBtn} onPress={setShowPassword}>Показати</Text>
                                 </TouchableOpacity>
                         </View>
                         <TouchableOpacity
