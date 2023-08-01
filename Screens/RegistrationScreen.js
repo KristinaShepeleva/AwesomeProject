@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ImageBackground, KeyboardAvoidingView, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { ImageBackground, KeyboardAvoidingView, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard, TouchableWithoutFeedback, Alert  } from "react-native";
 import BgImage from '../assets/images/photo_bg.jpg';
 
 import { AntDesign } from '@expo/vector-icons'; 
@@ -20,11 +20,18 @@ export default function RegistrationScreen () {
         Keyboard.dismiss(); 
     }
 
-      const setData = () => {
-        setIsShowKeyboard(false);
-          Keyboard.dismiss(); 
-          console.log(state);
-          setState(initialState);
+    const setData = () => {
+        const email  = state.email;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        if (!emailPattern.test(email)) {
+            Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
+        } else {
+           setIsShowKeyboard(false);
+           Keyboard.dismiss(); 
+           console.log(state);
+           setState(initialState);
+        };  
     }
 
     const setShowPassword = () => {
@@ -41,9 +48,9 @@ export default function RegistrationScreen () {
                 source={BgImage}>
     
                 <KeyboardAvoidingView
-                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                >
-                    <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 32 : 80}}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+                    <View style={{ ...styles.form}}>
 
                             <View style={styles.addPhoto}><View style={styles.photo}><TouchableOpacity style={styles.iconAdd}><AntDesign name="pluscircleo" size={24} color="#FF6C00" /></TouchableOpacity></View>
                             </View>
@@ -59,9 +66,10 @@ export default function RegistrationScreen () {
                         <TextInput style={styles.input} placeholder="Адреса електронної пошти"
                                 onFocus={() => setIsShowKeyboard(true)}
                                 value={state.email}
+                                autoComplete="email"
                             onChangeText={(value) => setState((prevState) => ({...prevState, email: value }))}
                         />
-     
+                        
                         <View style={styles.inputPassword}>
                             <TextInput style={styles.input} placeholder="Пароль"
                                 secureTextEntry={isShow}
@@ -80,7 +88,7 @@ export default function RegistrationScreen () {
                         >
                             <Text style={styles.btnText}>Зареєстуватися</Text> 
                         </TouchableOpacity>
-                        <View style={styles.wrapLogIn}>
+                        <View style={{...styles.wrapLogIn, marginBottom: isShowKeyboard ? (Platform.OS === 'ios' ? 20 : 190) : 60}}>
                         <Text style={styles.textLogIn}>Вже є акаунт?</Text>
                         <TouchableOpacity activeOpacity={0.8}><Text style={styles.btnLogIn}> Увійти</Text>
                         </TouchableOpacity>
@@ -115,7 +123,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 500,
         letterSpacing: 0.3,
-
     },
     form: {
         position: 'relative',
@@ -162,7 +169,7 @@ const styles = StyleSheet.create({
 
     },
     inputPassword: {
-        marginBottom: 26,
+        marginBottom: 16,
         position: 'relative',
     },
     inputBtn: {
@@ -198,5 +205,5 @@ const styles = StyleSheet.create({
     btnLogIn: {
         fontSize: 16,
         color: '#1B4371',
-    }
+    },
 });

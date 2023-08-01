@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard, TouchableWithoutFeedback, Alert } from "react-native";
 import BgImage from '../assets/images/photo_bg.jpg';
 
 const initialState = {
@@ -19,10 +19,21 @@ export default function LoginScreen () {
     }
 
       const setData = () => {
-        setIsShowKeyboard(false);
-          Keyboard.dismiss(); 
-          console.log(state);
-          setState(initialState);
+        const {email, password}  = state;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+          if (!email.trim() || !password.trim()) {
+              return Alert.alert('Будь ласка заповніть поля');
+          }; 
+          
+        if (!emailPattern.test(email)) {
+            Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
+        } else {
+           setIsShowKeyboard(false);
+           Keyboard.dismiss(); 
+           console.log(state);
+           setState(initialState);
+        };  
     }
 
      const setShowPassword = () => {
@@ -40,7 +51,7 @@ export default function LoginScreen () {
                 <KeyboardAvoidingView
                  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 >
-                    <View style={{ ...styles.form, paddingBottom: isShowKeyboard ? 32 : 80}}>
+                    <View style={styles.form}>
 
                         <Text style={styles.title}>Увійти</Text> 
                          <View style={styles.inputEmail}>
@@ -69,7 +80,7 @@ export default function LoginScreen () {
                         >
                             <Text style={styles.btnText}>Увійти</Text> 
                         </TouchableOpacity>
-                        <View style={styles.wrapLogIn}>
+                        <View style={{...styles.wrapLogIn, marginBottom: isShowKeyboard ? (Platform.OS === 'ios' ? 20 : 190) : 120}}>
                         <Text style={styles.textLogIn}>Немає акаунту?</Text>
                         <TouchableOpacity activeOpacity={0.8}><Text style={styles.btnLogIn}> Зареєструватися</Text>
                         </TouchableOpacity>
@@ -125,7 +136,7 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     inputPassword: {
-        marginBottom: 26,
+        marginBottom: 16,
         position: 'relative',
     },
     inputBtn: {
