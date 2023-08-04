@@ -8,7 +8,6 @@ const initialState = {
     password: "",
 }
 
-
 export default function LoginScreen () {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
@@ -21,23 +20,27 @@ export default function LoginScreen () {
         Keyboard.dismiss(); 
     }
 
-      const setData = () => {
-        const {email, password}  = state;
+    const setData = () => {
+        const { email, password } = state;
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         
-          if (!email.trim() || !password.trim()) {
-              return Alert.alert('Будь ласка заповніть поля');
-          }; 
+        //   if (!email.trim() || !password.trim()) {
+        //       return Alert.alert('Будь ласка заповніть поля');
+        //   }; 
           
-        if (!emailPattern.test(email)) {
-            Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
-        } else {
-           setIsShowKeyboard(false);
-           Keyboard.dismiss(); 
-           console.log(state);
-           setState(initialState);
-        };  
-    }
+        // if (!emailPattern.test(email)) {
+        //     return Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
+        // }
+        console.log(state);
+        navigation.navigate('Home');
+
+
+        keyboardHide();
+        // setIsShowKeyboard(false);
+        // Keyboard.dismiss();
+        setState(initialState);
+        
+    };
 
      const setShowPassword = () => {
         setShow(isShow => !isShow);
@@ -85,7 +88,7 @@ export default function LoginScreen () {
                         </TouchableOpacity>
                         <View style={{...styles.wrapLogIn, marginBottom: isShowKeyboard ? (Platform.OS === 'ios' ? 20 : 190) : 120}}>
                         <Text style={styles.textLogIn}>Немає акаунту?</Text>
-                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("Registration")}><Text style={styles.btnLogIn}> Зареєструватися</Text>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("Registration")}><Text style={styles.btnLogIn}>Зареєструватися</Text>
                         </TouchableOpacity>
                     </View>
                     </View>

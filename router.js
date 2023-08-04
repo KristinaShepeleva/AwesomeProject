@@ -1,4 +1,5 @@
 import React from "react";
+import {TouchableOpacity} from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -14,9 +15,9 @@ import ProfileScreen from './Screens/MainScreen/ProfileScreens';
 
 //icons
 import { Feather } from '@expo/vector-icons'; 
-//import { Feather } from '@expo/vector-icons';
 
-export const useRoute = (isAuth) => {
+
+ export const useRoute = (isAuth) => {
     if (!isAuth) {
       return (
         <AuthStack.Navigator>
@@ -48,8 +49,17 @@ export const useRoute = (isAuth) => {
           activeTintColor: "#FF6C00",
           inactiveTintColor: "#212121",
       })}>
-            <MainTab.Screen name="Posts" component={PostsScreens} />
-        <MainTab.Screen name="Create" component={CreatePostsScreen} />
+            <MainTab.Screen name="Posts" component={PostsScreens} options={{
+          title: "Публікації", headerRight: () => (
+                <TouchableOpacity activeOpacity={0.8} onPress={() => alert("This is a log-out!")}>
+                <Feather name="log-out" size={24} color="black" />
+                </TouchableOpacity>
+              
+            ),
+        }} />
+        <MainTab.Screen name="Create" component={CreatePostsScreen} options={{
+          title: "Створити публікацію",
+        }}/>
         <MainTab.Screen name="Profile" component={ProfileScreen}/>
       </MainTab.Navigator>
     )

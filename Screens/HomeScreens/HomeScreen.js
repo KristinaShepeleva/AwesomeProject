@@ -1,5 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { TouchableOpacity } from "react-native";
 
 const MainTab = createBottomTabNavigator();
 
@@ -30,8 +31,10 @@ const Home = () => {
           activeTintColor: "#FF6C00",
           inactiveTintColor: "#212121",
       })}>
-            <MainTab.Screen name="Posts" component={PostsScreens} />
-        <MainTab.Screen name="Create" component={CreatePostsScreen} />
+            <MainTab.Screen name="Posts" component={PostsScreens} options={{
+            headerShown: false
+          }}/>
+        <MainTab.Screen name="Create" component={CreatePostsScreen}/>
         <MainTab.Screen name="Profile" component={ProfileScreen}/>
       </MainTab.Navigator>
     )
@@ -39,3 +42,38 @@ const Home = () => {
   
 
 export default Home;
+
+
+// (
+//         <MainTab.Navigator
+//             screenOptions={({ route }) => ({
+//         tabBarIcon: ({ focused, color, size }) => {
+//           let iconName;
+
+//           if (route.name === "Posts") {
+//             iconName =  "grid";
+//           } else if (route.name === "Create") {
+//             iconName = "plus";
+//           } else if (route.name === "Profile") {
+//             iconName = "user";
+//           }
+//           return <Feather name={iconName} size={size} color={color} />;
+//           },
+//           tabBarShowLabel: false,
+//           activeTintColor: "#FF6C00",
+//           inactiveTintColor: "#212121",
+//       })}>
+//             <MainTab.Screen name="Posts" component={PostsScreens} options={{
+//           title: "Публікації", headerRight: () => (
+//                 <TouchableOpacity activeOpacity={0.8} onPress={() => alert("This is a log-out!")}>
+//                 <Feather name="log-out" size={24} color="black" />
+//                 </TouchableOpacity>
+              
+//             ),
+//         }} />
+//         <MainTab.Screen name="Create" component={CreatePostsScreen} options={{
+//           title: "Створити публікацію",
+//         }}/>
+//         <MainTab.Screen name="Profile" component={ProfileScreen}/>
+//       </MainTab.Navigator>
+//     )
