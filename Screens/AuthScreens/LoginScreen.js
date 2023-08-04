@@ -35,7 +35,7 @@ export default function LoginScreen () {
         navigation.navigate('Home');
 
 
-        keyboardHide();
+         keyboardHide();
         // setIsShowKeyboard(false);
         // Keyboard.dismiss();
         setState(initialState);

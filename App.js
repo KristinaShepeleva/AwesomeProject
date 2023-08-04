@@ -36,7 +36,9 @@ export default function App() {
           <AuthStack.Screen options={{
             headerShown: false
         }} name="Login" component={Login} />
-        <AuthStack.Screen name="Home" component={Home} />
+        <AuthStack.Screen name="Home" component={Home} options={{
+            headerShown: false
+        }}/>
         </AuthStack.Navigator>
     </NavigationContainer>  
   );

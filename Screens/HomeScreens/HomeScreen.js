@@ -31,9 +31,7 @@ const Home = () => {
           activeTintColor: "#FF6C00",
           inactiveTintColor: "#212121",
       })}>
-            <MainTab.Screen name="Posts" component={PostsScreens} options={{
-            headerShown: false
-          }}/>
+            <MainTab.Screen name="Posts" component={PostsScreens} />
         <MainTab.Screen name="Create" component={CreatePostsScreen}/>
         <MainTab.Screen name="Profile" component={ProfileScreen}/>
       </MainTab.Navigator>
