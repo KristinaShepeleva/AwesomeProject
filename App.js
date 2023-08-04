@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import React from "react";
+import { StyleSheet, View } from 'react-native';
 
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -7,7 +8,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 const AuthStack = createStackNavigator();
 
 //import { StatusBar } from 'expo-status-bar';
-//import { StyleSheet, Text, View } from 'react-native';
+
 
 import { useFonts } from 'expo-font';
 
@@ -28,34 +29,22 @@ export default function App() {
   }
 
   return (
+    <View style={styles.container}>
     <NavigationContainer>
-      <AuthStack.Navigator initialRouteName="Login">
-          <AuthStack.Screen options={{
-            headerShown: false
-          }} name="Registration" component={Registr} />
-          <AuthStack.Screen options={{
-            headerShown: false
-        }} name="Login" component={Login} />
-        <AuthStack.Screen name="Home" component={Home} options={{
-            headerShown: false
-        }}/>
+      <AuthStack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+          <AuthStack.Screen name="Registration" component={Registr} />
+          <AuthStack.Screen name="Login" component={Login} />
+        <AuthStack.Screen name="Home" component={Home}/>
         </AuthStack.Navigator>
-    </NavigationContainer>  
+      </NavigationContainer>  
+      </View>
   );
 };
 
 
-   {/* <AuthStack.Navigator>
-        <AuthStack.Screen options={{
-          headerShown: false
-        }} name="Registration" component={Registr} />
-        <AuthStack.Screen options={{
-          headerShown: false
-        }} name="Login" component={Login} />
-      </AuthStack.Navigator> */}
-
-      {/* <MainTab.Navigator>
-        <MainTab.Screen name="Posts" component={PostsScreens} />
-        <MainTab.Screen name="Create" component={CreatePostsScreen} />
-        <MainTab.Screen name="Profile" component={ProfileScreen}/>
-      </MainTab.Navigator> */}
+  const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+});
