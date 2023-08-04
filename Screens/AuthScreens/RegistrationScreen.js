@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ImageBackground, KeyboardAvoidingView, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard, TouchableWithoutFeedback, Alert  } from "react-native";
-import BgImage from '../assets/images/photo_bg.jpg';
+import BgImage from '../../assets/images/photo/photo_bg.jpg';
+import { useNavigation } from '@react-navigation/native';
 
 import { AntDesign } from '@expo/vector-icons'; 
 
@@ -14,6 +15,8 @@ export default function RegistrationScreen () {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
     const [isShow, setShow] = useState(true);
+
+    const navigation = useNavigation();
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
@@ -50,25 +53,25 @@ export default function RegistrationScreen () {
                 <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-                    <View style={{ ...styles.form}}>
+                    <View style={styles.form}>
 
                             <View style={styles.addPhoto}><View style={styles.photo}><TouchableOpacity style={styles.iconAdd}><AntDesign name="pluscircleo" size={24} color="#FF6C00" /></TouchableOpacity></View>
                             </View>
                         
                         <Text style={styles.title}>Реєстрація</Text> 
-
+<View>
                         <TextInput style={styles.input} placeholder="Логін"
                                 onFocus={() => setIsShowKeyboard(true)}
                                 value={state.nikename}
                                 onChangeText={(value) => setState((prevState) => ({ ...prevState, nikename: value }))}
-                            />
-
+                            /></View>
+<View>
                         <TextInput style={styles.input} placeholder="Адреса електронної пошти"
                                 onFocus={() => setIsShowKeyboard(true)}
                                 value={state.email}
                                 autoComplete="email"
                             onChangeText={(value) => setState((prevState) => ({...prevState, email: value }))}
-                        />
+                        /></View>
                         
                         <View style={styles.inputPassword}>
                             <TextInput style={styles.input} placeholder="Пароль"
@@ -90,10 +93,10 @@ export default function RegistrationScreen () {
                         </TouchableOpacity>
                         <View style={{...styles.wrapLogIn, marginBottom: isShowKeyboard ? (Platform.OS === 'ios' ? 20 : 190) : 60}}>
                         <Text style={styles.textLogIn}>Вже є акаунт?</Text>
-                        <TouchableOpacity activeOpacity={0.8}><Text style={styles.btnLogIn}> Увійти</Text>
+                        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate("Login")}><Text style={styles.btnLogIn}>Увійти</Text>
                         </TouchableOpacity>
                     </View>
-                    </View>
+                    </View> 
                     
                 </KeyboardAvoidingView>
             </ImageBackground>
