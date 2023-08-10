@@ -1,8 +1,12 @@
 import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView, TextInput } from 'react-native';
+import { Text, View } from 'react-native';
 
 const CommentScreen = () => {
-
+return (
+    <View>
+      <Text>CommentsScreen</Text>
+    </View>
+  );
 }
 
 export default CommentScreen;
