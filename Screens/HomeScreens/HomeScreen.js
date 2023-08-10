@@ -11,7 +11,7 @@ import ProfileScreen from '../MainScreen/ProfileScreens';
 //icons
 import { Feather } from '@expo/vector-icons'; 
 
-const Home = () => {
+const Home = ({navigation}) => {
   return (
         <MainTab.Navigator screenOptions={() => ({
             tabBarShowLabel: false, 
@@ -19,20 +19,20 @@ const Home = () => {
             inactiveTintColor: '#212121',
       })} >
       <MainTab.Screen options={{
-        title: "Публікації",
-        headerRight: () => (
-                <TouchableOpacity style={styles.btnLogOut} activeOpacity={0.8} onPress={() => alert("This is a log-out!")}>
-                <Feather name="log-out" size={24} color="#212121" />
-                </TouchableOpacity>
-            ),
+        headerShown: false,
                 tabBarIcon: ({ focused, size, color }) => (
                     <Feather name="grid" size={size} color={color} />), 
             }} name="Posts" component={PostsScreens} />
-        <MainTab.Screen options={{
+      <MainTab.Screen options={{
+        title: 'Створити публікацію',
+        headerLeft: () => (
+          <Feather style={styles.arrowLeft} name="arrow-left" size={24} color="black" onPress={() => navigation.navigate("Posts")} />
+        
+          ),
           tabBarIcon: ({ focused, size, color }) => (
             <View style={styles.btnCreate}><Feather style={styles.icon} name="plus" size={size} color={color} /></View>)
             }} name="Create" component={CreatePostsScreen} />
-        <MainTab.Screen options={{
+      <MainTab.Screen options={{
                 tabBarIcon: ({ focused, size, color }) => (
                     <Feather name="user" size={size} color={color} />)
             }} name="Profile" component={ProfileScreen}/>
@@ -60,6 +60,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  arrowLeft: {
+    marginLeft: 16,
+  }
 })
 
 

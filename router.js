@@ -65,20 +65,6 @@ import { Feather } from '@expo/vector-icons';
     )
 };
   
-
-
-
-
-    //   tabBarStyle: {
-    //       height: 64,
-    //       paddingTop: 10,
-    //       paddingBottom: 20,
-
-    //       alignItems: 'center',
-    //       alignContent: 'center',
-    //       justifyContent: 'center',
-    //     } 
-
     
     
     // (
