@@ -19,7 +19,7 @@ const PostsScreen = ({ navigation }) => {
           title: 'Публікації',
       headerLeft: false,
       headerRight: () => (
-                <TouchableOpacity style={styles.btnLogOut} activeOpacity={0.8} onPress={() => alert("This is a log-out!")}>
+                <TouchableOpacity style={styles.btnLogOut} activeOpacity={0.8} onPress={() => navigation.navigate("Login")}>
                 <Feather name="log-out" size={24} color="#212121" />
                 </TouchableOpacity>
             ),}} />

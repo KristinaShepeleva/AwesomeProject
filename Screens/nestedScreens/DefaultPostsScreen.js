@@ -13,7 +13,7 @@ const DefaultScreen = ({ route, navigation }) => {
     }
   }, [route.params]);
     
-    
+   // console.log(route.params);
   return (
       <View style={styles.container}>
       <View style={styles.avatarWrapper}>
@@ -25,7 +25,9 @@ const DefaultScreen = ({ route, navigation }) => {
        </View>
       <FlatList data={posts} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) =>
         <View style={styles.postItem}>
-          <Image sourse={{ uri: item.postPhoto }} style={styles.image} />
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: `${item.postPhoto}` }} style={styles.image} />
+            </View>
                   <Text style={styles.postTitle}>{item.postName}</Text>
                   <View style={styles.postsWrapper}>
                   <TouchableOpacity style={styles.directionRow} onPress={() => navigation.navigate("Comment", item.postPhoto ) } >
@@ -81,10 +83,8 @@ image: {
     marginTop: 16,
     marginBottom: 8,
     borderRadius: 8,
-    
-  alignItems: "center",
-    justifyContent: "center",
     height: 240,
+    width: "100%",
     backgroundColor: '#f6f6f6',
     },
 postTitle: {

@@ -33,7 +33,7 @@ export default function LoginScreen () {
         //     return Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
         // }
         console.log(state);
-        navigation.navigate('Home');
+        navigation.navigate('Home', { user: { email, password } })
 
 
          keyboardHide();
