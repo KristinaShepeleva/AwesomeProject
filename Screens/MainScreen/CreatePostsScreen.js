@@ -8,7 +8,9 @@ import * as Location from "expo-location";
 import { storage, db } from '../../frebase/config';
 import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
 import { useSelector } from 'react-redux';
-import { collection, addDoc} from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
+
+
 
 import { selectUserId, selectNikename } from '../../redux/auth/authSelections';
 

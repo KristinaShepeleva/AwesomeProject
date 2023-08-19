@@ -3,11 +3,19 @@ import { initializeApp } from 'firebase/app';
 // Функція для підключення авторизації в проект
 import { getAuth } from "firebase/auth";
 // Функція для підключення бази даних у проект
-import { getFirestore } from "firebase/firestore";
+ import { getFirestore } from "firebase/firestore";
 // Функція для підключення сховища файлів в проект
 import { getStorage } from "firebase/storage";
 
 
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCcFFtiPgUvNVoGnvV9zKYy84t8fhTCiBk",
+//   authDomain: "travel-d0ddb.firebaseapp.com",
+//   projectId: "travel-d0ddb",
+//   storageBucket: "travel-d0ddb.appspot.com",
+//   messagingSenderId: "440356844168",
+//   appId: "1:440356844168:web:9187a502a23f0cd5ef653d"
+// };
 
 const firebaseConfig = {
   apiKey: "AIzaSyBS1Rl81JYVuFWkgUEXKTmaDA2jNNL3Vms",
@@ -20,40 +28,16 @@ const firebaseConfig = {
   measurementId: "G-98Y1HE9551"
 };
 
+
+
 export const app = initializeApp(firebaseConfig);
 
+
 export const auth = getAuth(app);
-export const db = getFirestore(app);
 export const storage = getStorage(app);
+export const db = getFirestore(app);
 
 
 
-// // initialize the project
-// import { initializeApp } from 'firebase/app';
-// // Function for connecting the database to the project
-// import { getFirestore } from 'firebase/firestore';
-// // Function for connecting file storage to the project
-// import { getStorage } from 'firebase/storage';
-
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { initializeAuth, getReactNativePersistence } from 'firebase/auth/react-native';
 
 
-// const firebaseConfig = {
-//   apiKey: 'AIzaSyAY1V_g8F-nGX6LZWaUN1T_45-WUmDdqlQ',
-//   authDomain: 'theart-of-travel.firebaseapp.com',
-//   projectId: 'theart-of-travel',
-//   storageBucket: 'theart-of-travel.appspot.com',
-//   messagingSenderId: '1097815860473',
-//   appId: '1:1097815860473:web:569112da3e3771ad332e28',
-// };
-
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-
-// export const auth = initializeAuth(app, {
-//   persistence: getReactNativePersistence(AsyncStorage),
-// });
-
-// export const db = getFirestore(app);
-// export const storage = getStorage(app);
