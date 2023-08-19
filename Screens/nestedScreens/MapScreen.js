@@ -7,10 +7,14 @@ const MapScreen = ({route}) => {
    
     useEffect(() => {
         if (route.params) {
-            setLocation(route.params.postLocation)
+            setLocation({
+        latitude: route.params.location.latitude,
+        longitude: route.params.location.longitude,
+      })
         };
-  }, []);
+  }, [route.params]);
 
+ 
 return (
     <View style={styles.container}>
         <MapView style={styles.mapStyle}

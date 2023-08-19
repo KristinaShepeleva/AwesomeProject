@@ -32,7 +32,7 @@ export const authSignUpUser = ({ photo, nikename, email, password }) =>
         avatar: photoURL,
       };
               dispatch(updateUserProfile(userProfile));
-              console.log("auth operation user", user);
+              
       return user;
                 
             } catch (error) {
@@ -45,6 +45,7 @@ export const authSignInUser =
   async (dispatch, state) => {
     try {
       return await signInWithEmailAndPassword(email, password);
+
     } catch (error) {
       return error.code;
     }
@@ -82,13 +83,13 @@ export const authUpdateUser =
         avatar: avatarURL,
       });
 
-      const { uid, displayName, email: emailBase, avatar: photoUrlBase } = auth.currentUser;
+      const { uid, displayName, email, avatar: photoURL } = auth.currentUser;
 
       const userProfile = {
         userId: uid,
         nikename: displayName,
-        email: emailBase,
-        avatar: photoUrlBase,
+        email,
+        avatar: photoURL,
       };
 
       dispatch(updateUserProfile(userProfile));

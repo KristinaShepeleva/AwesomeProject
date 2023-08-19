@@ -28,19 +28,17 @@ export default function LoginScreen () {
     const setData = () => {
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         
-        //   if (!email.trim() || !password.trim()) {
-        //       return Alert.alert('Будь ласка заповніть поля');
-        //   }; 
+          if (!email.trim() || !password.trim()) {
+              return Alert.alert('Будь ласка заповніть поля');
+          }; 
           
-        // if (!emailPattern.test(email)) {
-        //     return Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
-        // }
+        if (!emailPattern.test(email)) {
+            return Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
+        }
         
 
         dispatch(authSignInUser({ email, password }));
         dispatch(authStateChange({ stateChange: true }));
-        // navigation.navigate('Home', { user: { email, password } })
-console.log("login",{email, password});
 
          keyboardHide();
         setEmail(null);

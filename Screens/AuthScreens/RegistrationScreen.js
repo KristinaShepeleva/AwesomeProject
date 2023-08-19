@@ -43,11 +43,11 @@ const keyboardHide = () => {
 
 
 const setData = async () => {
-        // const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         
-        // if (!emailPattern.test(email)) {
-        //     Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
-        // } else { };
+        if (!emailPattern.test(email)) {
+        return Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
+        } 
         
     const photo = await uploadImageToServer(avatar);
             

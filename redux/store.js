@@ -42,6 +42,3 @@ export const persistor = persistStore(store);
 
 
 
-
-
- // [authSlice.name]: persistReducer(persistConfig, authSlice.reducer),

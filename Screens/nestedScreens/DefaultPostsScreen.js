@@ -4,6 +4,9 @@ import { Text, View, StyleSheet, FlatList, Image, TouchableOpacity } from 'react
 import { useSelector } from 'react-redux';
 import { selectAvatar, selectNikename, selectEmail, selectUserId } from '../../redux/auth/authSelections';
 
+import { collection, doc, onSnapshot, orderBy, query, setDoc } from 'firebase/firestore';
+import { db } from '../../frebase/config';
+
 import { SimpleLineIcons } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
 
@@ -15,26 +18,27 @@ const DefaultScreen = ({ route, navigation }) => {
   const email = useSelector(selectEmail);
   const userId = useSelector(selectUserId);
 
-  console.log("defoult", avatar)
-  
-  
 
-//   const getPosts = async () => {
-//     try {
-//       const postsData = collection(db, 'posts');
-//       onSnapshot(postsData, (snapshot) => {
-//         const sortedPosts = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-//         setPosts(sortedPosts);
-//       });
-//     } catch (error) {
-//       console.log(error);
-//     }
-// }
+   console.log("posts",posts)
+ 
+  const getPosts = async () => {
+    try {
+      const postsData = collection(db, 'posts');
+      onSnapshot(postsData, (snapshot) => {
+        const sortedPosts = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+        setPosts(sortedPosts);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+}
 
-// useEffect(() => {
-//     getPosts()
-//   }, []);
+useEffect(() => {
+  getPosts();
+   console.log("posts",posts)
+  }, []);
     
+
    
   return (
       <View style={styles.container}>
@@ -48,16 +52,16 @@ const DefaultScreen = ({ route, navigation }) => {
       <FlatList data={posts} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) =>
         <View style={styles.postItem}>
           <View style={styles.imageContainer}>
-            <Image source={{ uri: `${item.postPhoto}` }} style={styles.image} />
+            <Image source={{ uri: item.photo }} style={styles.image} />
             </View>
                   <Text style={styles.postTitle}>{item.postName}</Text>
                   <View style={styles.postsWrapper}>
-                  <TouchableOpacity style={styles.directionRow} onPress={() => navigation.navigate("Comment", item.postPhoto ) } >
+                  <TouchableOpacity style={styles.directionRow} onPress={() => navigation.navigate("Comment", item) } >
                 <FontAwesome name="comment-o" size={24} color="black" />  
                 <Text style={styles.commentText}>0</Text>
                   </TouchableOpacity>
                   
-                   <TouchableOpacity style={styles.directionRow} onPress={() => navigation.navigate("Map", { location: item.location }) } >
+            <TouchableOpacity style={styles.directionRow} onPress={() => navigation.navigate("Map", { location: item.postLocation }) } >
                 <SimpleLineIcons name="location-pin" size={24} color="black" /> 
                 <Text style={styles.locationText}>{item.postAddress}</Text>
                       </TouchableOpacity>
