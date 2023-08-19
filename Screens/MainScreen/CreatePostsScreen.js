@@ -4,7 +4,13 @@ import { Text, View, StyleSheet, TouchableOpacity, Image, Platform, KeyboardAvoi
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
-import MapView, { Marker } from "react-native-maps";
+
+import { storage, db } from '../../frebase/config';
+import { uploadBytes, ref, getDownloadURL } from 'firebase/storage';
+import { useSelector } from 'react-redux';
+import { collection, addDoc} from 'firebase/firestore';
+
+import { selectUserId, selectNikename } from '../../redux/auth/authSelections';
 
 import { Feather } from '@expo/vector-icons';
 
@@ -18,31 +24,32 @@ const CreatePostsScreen = ({ navigation }) => {
   const [postName, setPostName] = useState('');
   const [postAddress, setPostAddress] = useState('');
   const [postLocation, setPostLocation] = useState(null);
+  const userId = useSelector(selectUserId);
+  const nikename = useSelector(selectNikename);
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   
   useEffect(() => {
-
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
-
       setHasPermission(status === 'granted');
     })();
 
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.log("Permission to access location was denied");
-      }
 
-      let location = await Location.getCurrentPositionAsync({});
-      const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      };
-      setPostLocation(coords);
-    })();
+    // (async () => {
+    //   let { status } = await Location.requestForegroundPermissionsAsync();
+    //   if (status !== "granted") {
+    //     console.log("Permission to access location was denied");
+    //   }
+
+    //   let location = await Location.getCurrentPositionAsync({});
+    //   const coords = {
+    //     latitude: location.coords.latitude,
+    //     longitude: location.coords.longitude,
+    //   };
+    //   setPostLocation(coords);
+    // })();
   }, []);
 
   if (hasPermission === null) {
@@ -52,45 +59,95 @@ const CreatePostsScreen = ({ navigation }) => {
     return <Text>No access to camera</Text>;
   }
 
-  const takePhoto = async () => {
+  const getLocation = async () => {
+      // let { status } = await Location.requestForegroundPermissionsAsync();
+      // if (status !== "granted") {
+      //   console.log("Permission to access location was denied");
+      // }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setPostLocation(coords);
+    }
+
+const takePhoto = async () => {
      if (cameraRef) {
       const { uri } = await cameraRef.takePictureAsync();
-      await MediaLibrary.createAssetAsync(uri);
+       await MediaLibrary.createAssetAsync(uri);
+       await getLocation();
       setPostPhoto(uri);
-    };
-    
+    }; 
   };
 
-  const onSendPost = () => {
+const uploadPhotoToServer = async (postPhoto) => {
+    const response = await fetch(postPhoto);
+    const file = await response.blob();
+
+    const uniqueImageId = Date.now().toString();
+    const path = `images/${uniqueImageId}.jpeg`;
+
+    const storageRef = ref(storage, path);
+
+    const metadata = {
+      contentType: 'image/jpeg',
+    };
+
+    await uploadBytes(storageRef, file, metadata);
+
+    const downloadPhoto = await getDownloadURL(storageRef);
+    return downloadPhoto;
+  };
+  
+  const uploadPostToServer = async () => {
+    const photo = await uploadPhotoToServer(postPhoto);
+    
+    const newPost = {
+      userId,
+      nikename,
+      photo,
+      postName,
+      postAddress,
+      postLocation,
+      comments: [],
+    };
+
+    console.log("submit", newPost);
+
+    try {
+      const docRef = await addDoc(collection(db, 'posts'), newPost);
+      console.log('Document written with ID: ', docRef.id);
+    } catch (error) {
+      console.error('Error adding document: ', error.message);
+    }
+}
+
+const onSendPost = async () => {
     if (!postPhoto || !postName.trim())
       return Alert.alert('Будь ласка заповніть поля');
-    
-    //console.log(postPhoto);
-
-    navigation.navigate("DefaultScreen",
-      {
-        postPhoto,
-        postName,
-        postAddress,
-        postLocation,
-      });
+       uploadPostToServer();
+  
+    navigation.navigate("DefaultScreen");
     keyboardHide();
     clearForm();
   };
 
-    const clearForm = () => {
+
+const clearForm = () => {
     setPostPhoto('');
     setPostName('');
     setPostAddress('');
     setPostLocation(null);
   };
 
-   const keyboardHide = () => {
-        setIsShowKeyboard(false);
-        Keyboard.dismiss(); 
+const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss(); 
     }
 
-  return (
+return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
   <View style={styles.container}>
          <View style={styles.takePhotoContainer}>

@@ -1,47 +1,112 @@
 import React, { useState } from "react";
 import { ImageBackground, KeyboardAvoidingView, Image, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View, Keyboard, TouchableWithoutFeedback, Alert  } from "react-native";
 import BgImage from '../../assets/images/photo/photo_bg.jpg';
-import { useNavigation } from '@react-navigation/native';
-
 import { AntDesign } from '@expo/vector-icons'; 
 
-const initialState = {
-    nikename: "",
-    email: "",
-    password: "",
+import { useNavigation } from '@react-navigation/native';
+
+import * as ImagePicker from 'expo-image-picker';
+
+import { useDispatch } from 'react-redux';
+
+import { authSignUpUser } from '../../redux/auth/authOperations';
+import { authStateChange } from '../../redux/auth/authReducer';
+
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { storage } from '../../frebase/config';
+
+export default function RegistrationScreen() {
+     
+const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+const [isShow, setShow] = useState(true);
+
+const [avatar, setAvatar] = useState(null);
+const [nikename, setNikename] = useState(null);
+const [email, setEmail] = useState(null);
+const [password, setPassword] = useState(null);
+    
+    
+const dispatch = useDispatch();
+const navigation = useNavigation();
+
+const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+    };
+
+    const clearForm = () => {
+    setAvatar(null);
+    setNikename(null);
+    setEmail(null);
+    setPassword(null);
 }
 
-export default function RegistrationScreen () {
-    const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-    const [state, setState] = useState(initialState);
-    const [isShow, setShow] = useState(true);
 
-    const navigation = useNavigation();
-
-    const keyboardHide = () => {
-        setIsShowKeyboard(false);
-        Keyboard.dismiss(); 
-    }
-
-    const setData = () => {
-        const email  = state.email;
-        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const setData = async () => {
+        // const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         
-        if (!emailPattern.test(email)) {
-            Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
-        } else {
-           setIsShowKeyboard(false);
-           Keyboard.dismiss(); 
-           console.log(state);
-           setState(initialState);
-        };  
+        // if (!emailPattern.test(email)) {
+        //     Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
+        // } else { };
+        
+    const photo = await uploadImageToServer(avatar);
+            
+    dispatch(authSignUpUser({photo, nikename, email, password }));
+    dispatch(authStateChange({ stateChange: true }));
+
+    setIsShowKeyboard(false);
+    Keyboard.dismiss(); 
+           
+    clearForm();   
     }
 
-    const setShowPassword = () => {
+const setShowPassword = () => {
         setShow(isShow => !isShow);
-    }
+    };
 
-    return (
+    
+    const onLoadAvatar = async () => {
+    
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert('Ви відмовилися дозволити цій програмі доступ до ваших фотографій');
+      return;
+      };
+      
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    })
+        
+    if (!result.canceled) {
+        const img = `${result.assets[0].uri}`;
+        setAvatar(img);
+      }  
+    };
+    
+const uploadImageToServer = async (avatar) => {
+    const response = await fetch(avatar);
+    const file = await response.blob();
+
+    const uniqueImageId = Date.now().toString();
+    const path = `avatar/${uniqueImageId}.jpeg`;
+
+    const storageRef = ref(storage, path);
+
+    const metadata = {
+      contentType: 'avatar/jpeg',
+    };
+
+    await uploadBytes(storageRef, file, metadata);
+    const downloadPhoto = await getDownloadURL(storageRef);
+    return downloadPhoto;
+  };
+ 
+    
+    
+return (
         <TouchableWithoutFeedback onPress={keyboardHide}>
         <View style={styles.container}>
             
@@ -53,32 +118,40 @@ export default function RegistrationScreen () {
                 <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-                    <View style={styles.form}>
+                        <View style={styles.form}>
+                            
+<View style={styles.addPhoto}>
+              <Image style={styles.photo} source={{ uri: avatar }} />
+              <TouchableOpacity
+                style={styles.iconAddTouchable}
+                onPress={onLoadAvatar}
+              >
+                <AntDesign style={styles.icon} name="pluscircleo" size={24} color="#FF6C00" />
+              </TouchableOpacity>
+            </View>
 
-                            <View style={styles.addPhoto}><View style={styles.photo}><TouchableOpacity style={styles.iconAdd}><AntDesign name="pluscircleo" size={24} color="#FF6C00" /></TouchableOpacity></View>
-                            </View>
                         
                         <Text style={styles.title}>Реєстрація</Text> 
 <View>
                         <TextInput style={styles.input} placeholder="Логін"
                                 onFocus={() => setIsShowKeyboard(true)}
-                                value={state.nikename}
-                                onChangeText={(value) => setState((prevState) => ({ ...prevState, nikename: value }))}
+                                value={nikename}
+                                onChangeText={setNikename}
                             /></View>
 <View>
                         <TextInput style={styles.input} placeholder="Адреса електронної пошти"
                                 onFocus={() => setIsShowKeyboard(true)}
-                                value={state.email}
+                                value={email}
                                 autoComplete="email"
-                            onChangeText={(value) => setState((prevState) => ({...prevState, email: value }))}
+                            onChangeText={setEmail}
                         /></View>
                         
                         <View style={styles.inputPassword}>
                             <TextInput style={styles.input} placeholder="Пароль"
                                 secureTextEntry={isShow}
                                     onFocus={() => setIsShowKeyboard(true)}
-                                    value={state.password}
-                            onChangeText={(value) => setState((prevState) => ({...prevState, password: value }))}
+                                    value={password}
+                            onChangeText={setPassword}
                             />
                             <TouchableOpacity activeOpacity={0.8} style={styles.inputBtn}>
                                 <Text style={styles.inputBtn} onPress={setShowPassword}>Показати</Text>
@@ -135,29 +208,33 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
     },
+
     addPhoto: {
-        width: '100%',
-        position: 'absolute',
-        top: -60,
-        left: 16,
-        right: 16,
-        flex: 1,
-        alignItems: 'center',
-    },
-    photo: {
+        width: "100%",
         position: 'relative',
+        top: -60,
+        alignItems: 'center',
+  },
+  photo: {
+     position: 'absolute',
         width: 120,
         height: 120,
         backgroundColor: '#F6F6F6',
         borderRadius: 16,
-    },
-    iconAdd: {
-        position: 'absolute',
-        bottom: 14,
-        right: -12,
+  },
+
+    iconAddTouchable: {
+        position: 'relative',
+        
         borderRadius: 100,
         backgroundColor: "#ffffff",
     },
+    icon: {
+        position: 'absolute',
+        bottom: -108,
+        right: -72,
+    },
+
     input: {
         height: 50,
         borderStyle: 'solid',
@@ -181,7 +258,6 @@ const styles = StyleSheet.create({
         top: 8,
         color: '#1B4371',
         fontSize: 16
-
     },
     btn: {
         height: 50,

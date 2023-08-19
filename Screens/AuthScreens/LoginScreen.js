@@ -3,16 +3,20 @@ import { ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, Text, Text
 import { useNavigation } from '@react-navigation/native';
 import BgImage from '../../assets/images/photo/photo_bg.jpg';
 
-const initialState = {
-    email: "",
-    password: "",
-}
+import { useDispatch } from 'react-redux';
+import { authSignInUser } from '../../redux/auth/authOperations';
+import { authStateChange } from '../../redux/auth/authReducer';
+
+
 
 export default function LoginScreen () {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-    const [state, setState] = useState(initialState);
     const [isShow, setShow] = useState(true);
 
+    const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+
+    const dispatch = useDispatch();
 
     const navigation = useNavigation();
 
@@ -22,7 +26,6 @@ export default function LoginScreen () {
     }
 
     const setData = () => {
-        const { email, password } = state;
         const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         
         //   if (!email.trim() || !password.trim()) {
@@ -32,14 +35,16 @@ export default function LoginScreen () {
         // if (!emailPattern.test(email)) {
         //     return Alert.alert('Помилка валідації', 'Будь ласка, введіть дійсну поштову адресу.');
         // }
-        console.log(state);
-        navigation.navigate('Home', { user: { email, password } })
+        
 
+        dispatch(authSignInUser({ email, password }));
+        dispatch(authStateChange({ stateChange: true }));
+        // navigation.navigate('Home', { user: { email, password } })
+console.log("login",{email, password});
 
          keyboardHide();
-        // setIsShowKeyboard(false);
-        // Keyboard.dismiss();
-        setState(initialState);
+        setEmail(null);
+        setPassword(null);
         
     };
 
@@ -64,8 +69,8 @@ export default function LoginScreen () {
                          <View style={styles.inputEmail}>
                         <TextInput style={styles.input} placeholder="Адреса електронної пошти"
                                 onFocus={() => setIsShowKeyboard(true)}
-                                value={state.email}
-                            onChangeText={(value) => setState((prevState) => ({...prevState, email: value }))}
+                                value={email}
+                            onChangeText={setEmail}
                                 />
                                 </View>
      
@@ -73,8 +78,8 @@ export default function LoginScreen () {
                             <TextInput style={styles.input} placeholder="Пароль"
                                 secureTextEntry={isShow}
                                     onFocus={() => setIsShowKeyboard(true)}
-                                    value={state.password}
-                            onChangeText={(value) => setState((prevState) => ({...prevState, password: value }))}
+                                    value={password}
+                            onChangeText={setPassword}
                             />
                             <TouchableOpacity activeOpacity={0.8} style={styles.inputBtn}>
                                 <Text style={styles.inputBtn} onPress={setShowPassword}>Показати</Text>

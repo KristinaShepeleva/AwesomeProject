@@ -1,26 +1,48 @@
 import React, {useState, useEffect} from "react";
 import { Text, View, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 
+import { useSelector } from 'react-redux';
+import { selectAvatar, selectNikename, selectEmail, selectUserId } from '../../redux/auth/authSelections';
+
 import { SimpleLineIcons } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
 
 const DefaultScreen = ({ route, navigation }) => {
-    const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   
-  useEffect(() => {
-    if (route.params) {
-      setPosts(prevState => [...prevState, route.params])
-    }
-  }, [route.params]);
+  const avatar = useSelector(selectAvatar);
+  const nikename = useSelector(selectNikename);
+  const email = useSelector(selectEmail);
+  const userId = useSelector(selectUserId);
+
+  console.log("defoult", avatar)
+  
+  
+
+//   const getPosts = async () => {
+//     try {
+//       const postsData = collection(db, 'posts');
+//       onSnapshot(postsData, (snapshot) => {
+//         const sortedPosts = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+//         setPosts(sortedPosts);
+//       });
+//     } catch (error) {
+//       console.log(error);
+//     }
+// }
+
+// useEffect(() => {
+//     getPosts()
+//   }, []);
     
-   // console.log(route.params);
+   
   return (
       <View style={styles.container}>
       <View style={styles.avatarWrapper}>
-         <Image style={styles.avatarImg} />
+         <Image style={styles.avatarImg} source={{ uri: avatar }} />
         <View>
-          <Text style={styles.avatarName}>Natali Romanova</Text>
-          <Text style={styles.avatarEmail}>email@example.com</Text>
+          <Text style={styles.avatarName}>{nikename}</Text>
+          <Text style={styles.avatarEmail}>{email}</Text>
          </View>
        </View>
       <FlatList data={posts} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) =>
@@ -35,7 +57,7 @@ const DefaultScreen = ({ route, navigation }) => {
                 <Text style={styles.commentText}>0</Text>
                   </TouchableOpacity>
                   
-                   <TouchableOpacity style={styles.directionRow} onPress={() => navigation.navigate("Map", item.postLocation) } >
+                   <TouchableOpacity style={styles.directionRow} onPress={() => navigation.navigate("Map", { location: item.location }) } >
                 <SimpleLineIcons name="location-pin" size={24} color="black" /> 
                 <Text style={styles.locationText}>{item.postAddress}</Text>
                       </TouchableOpacity>

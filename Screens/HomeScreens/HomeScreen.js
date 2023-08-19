@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { TouchableOpacity, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 const MainTab = createBottomTabNavigator();
 
